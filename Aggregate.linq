@@ -42,7 +42,7 @@ select new{
 results.Dump();
 //media type with the most track
 var results = from x in MediaTypes
-where x.Tracks.Count().Max()
+where x.Tracks.Count()>=All(from y in Tracks select new {count = Count(y => y.TrackId)})
 select new{
 	       MeidaTypeId = x.MediaTypeId,
 		   Name = x.Name
