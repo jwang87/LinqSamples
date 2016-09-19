@@ -41,8 +41,45 @@ select new{
 };
 results.Dump();
 //media type with the most track
+
+//can this set of statements be written as one complete query
+//the answer is possibly, and in this case yes
+//in this example maxcount could be exchanged for the query that
+//   actually create the value in the first place
+
 var results = from x in MediaTypes
-where x.Tracks.Count()>=All(from y in Tracks select new {count = Count(y => y.TrackId)})
+where x.Tracks.Count()==((from y in MediaTypes select y.Tracks.Count()).Max())
+select new{
+	       MeidaTypeId = x.MediaTypeId,
+		   Name = x.Name
+		   };
+results.Dump();
+
+//using the method
+var popularMeidaTypesSubMethod = from x in MediaTypes
+							     where x.Tracks.Count() ==
+								 MediaTypes.Select(mt => mt.Tracks.Count()).Max()
+								 select new{
+	       MeidaTypeId = x.MediaTypeId,
+		   Name = x.Name
+		   };
+popularMeidaTypesSubMethod.Dump();
+
+
+//when you need to use maltiple steps
+//to solve a problem, wwitch your langauge
+//choice to either Statement(s) or Program
+
+//the results of each query will now be save in a variable
+//the variable can then be used in future queries
+
+var maxcount = (from x in MediaTypes
+	select x.Tracks.Count()).Max();
+//to dispaly the contents of a variable in LinqPad
+//you use the method .Dump()
+maxcount.Dump();
+var results = from x in MediaTypes
+			  where x.Tracks.Count() == maxcount
 select new{
 	       MeidaTypeId = x.MediaTypeId,
 		   Name = x.Name
