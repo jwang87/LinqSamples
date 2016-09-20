@@ -24,6 +24,8 @@ void Main()
 	PopWaiter.Dump();
 
 	//create a data set which contain the summary bills by waiter
+	var paraMonth = 4;
+	var paraYear = 2014;
 	var WaiterBills = from x in Waiters
 					  where x.LastName.Contains("k")
                   	  orderby x.LastName, x.FirstName
@@ -32,6 +34,8 @@ void Main()
 								  TotalBillCount = x.Bills.Count(),
 							  	  BillInfo = (from y in x.Bills
 							              	  where y.BillItems.Count() > 0
+											  && y.BillDate.Month == DateTime.Today.Month - paraMonth
+					 						  && y.BillDate.Year == paraYear
 							              	  select new BillItemSummary{
 										              	  BillID = y.BillID,
 													  	  BillDate = y.BillDate,

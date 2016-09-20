@@ -1,4 +1,4 @@
-<Query Kind="Statements">
+<Query Kind="Expression">
   <Connection>
     <ID>f93f12bb-a4fb-4649-834b-dbb2c2763d8e</ID>
     <Persist>true</Persist>
@@ -29,7 +29,7 @@ results.Dump();
 //        to indicate the collection instance attribute to be used
 //Average() average a specific field, thus you will likely need to use a delgate
 //        to indicate the collection instance attribute to be used
-var results = from x in Albums
+(from x in Albums
 orderby x.Title
 where x.Tracks.Count() > 0
 select new{
@@ -38,8 +38,18 @@ select new{
 		   TotalAlbumPrice = x.Tracks.Sum(y => y.UnitPrice),
 		   AvgA = (x.Tracks.Average(y => y.Milliseconds))/1000,
 		   AvgB = x.Tracks.Average(y => y.Milliseconds/1000)
-};
-results.Dump();
+}).Union(
+from x in Albums
+orderby x.Title
+where x.Tracks.Count() == 0
+select new{
+		   Title = x.Title,
+		   NumofTracks = 0,
+		   TotalAlbumPrice = 0,
+		   AvgA = 0,
+		   AvgB = 0
+})
+//results.Dump();
 //media type with the most track
 
 //can this set of statements be written as one complete query
