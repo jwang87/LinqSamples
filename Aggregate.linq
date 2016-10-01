@@ -29,7 +29,8 @@ results.Dump();
 //        to indicate the collection instance attribute to be used
 //Average() average a specific field, thus you will likely need to use a delgate
 //        to indicate the collection instance attribute to be used
-(from x in Albums
+(
+from x in Albums
 orderby x.Title
 where x.Tracks.Count() > 0
 select new{
@@ -37,8 +38,10 @@ select new{
 		   NumofTracks = x.Tracks.Count(),
 		   TotalAlbumPrice = x.Tracks.Sum(y => y.UnitPrice),
 		   AvgA = (x.Tracks.Average(y => y.Milliseconds))/1000,
-		   AvgB = x.Tracks.Average(y => y.Milliseconds/1000)
-}).Union(
+		   AvgB = x.Tracks.Average(y => y.Milliseconds/1000),
+		   AvgC = (x.Tracks.Select(u => u.Milliseconds)).Average()/1000
+}
+).Union(
 from x in Albums
 orderby x.Title
 where x.Tracks.Count() == 0
@@ -47,8 +50,10 @@ select new{
 		   NumofTracks = 0,
 		   TotalAlbumPrice = 0,
 		   AvgA = 0,
-		   AvgB = 0
-})
+		   AvgB = 0,
+		   AvgC = 0
+}
+)
 //results.Dump();
 //media type with the most track
 
